@@ -121,8 +121,12 @@ function _M.issue_cert(uiza_ssl_instance, domain)
         if cert_data and cert_data["cert_pem"] and cert_data["privkey_pem"] then
             local storage = uiza_ssl_instance.storage
             storage:set_cert(domain, cert_data["privkey_pem"], cert_data["cert_pem"], cert_info["expiry"])
-            cert_data.insert(expiry, tonumber(cert_info["expiry"]))
-            return cert_data, nil
+            local cert = {
+                ["cert_pem"]=cert_data["cert_pem"],
+                ["privkey_pem"]=cert_data["privkey_pem"],
+                ["expiry"]=tonumber(cert_info["expiry"])
+            }
+            return cert, nil
         end
     end
     ngx.log(ngx.ERR, "uiza-ssl: data error")
