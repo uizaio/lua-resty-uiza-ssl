@@ -22,7 +22,7 @@ $ sudo chmod +x /opt/resty-uiza-ssl
 ```
 Implement the necessary configuration inside your nginx config. Here is a minimal example:
 
-```config
+```lua
 events {
   worker_connections 1024;
 }
