@@ -11,7 +11,7 @@ Auto renewal certificate inside OpenResty/nginx with UIZA API.
 
 ```bash
 sudo luarocks install shell-games
-git clone git@github.com:namndbka/lua-resty-uiza-ssl.git
+git clone https://github.com/namndbka/lua-resty-uiza-ssl.git
 cp -R lua-resty-uiza-ssl/lib/resty <your_lua_lib_path>
 ```
 

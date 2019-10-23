@@ -47,7 +47,7 @@ end
 local function request_certificate(crt_uri)
     local response = {}
     local httpc = http
-    if(tostring(crt_uri):startswith('https://')) then 
+    if(crt_uri:find('https://') == 1) then 
         httpc = https
     end
     local res, code, responseHeader, status = httpc.request{
@@ -77,7 +77,7 @@ end
 local function request_certificate_data(crt_data_uri) 
     local response = {}
     local httpc = http
-    if(tostring(crt_data_uri):startswith('https://')) then 
+    if(crt_data_uri:find('https://') == 1) then 
         httpc = https
     end
     local res, code, responseHeader, status = httpc.request{
