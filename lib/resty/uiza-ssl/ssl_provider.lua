@@ -1,11 +1,9 @@
 local ltn12 = require "ltn12"
 local https = require "ssl.https"
-local http = require "socket.http"
 local json = require "json"
 local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/' -- You will need this for encoding/decoding
 local _M = {}
 
-http.TIMEOUT = 5
 https.TIMEOUT = 5
 -- decoding base64
 local function decode(data)
@@ -46,11 +44,7 @@ end
 
 local function request_certificate(crt_uri)
     local response = {}
-    local httpc = http
-    if(crt_uri:find('https://') == 1) then 
-        httpc = https
-    end
-    local res, code, responseHeader, status = httpc.request{
+    local res, code, responseHeader, status = https.request{
         url = crt_uri,
         method = "GET",
         headers = {
@@ -76,11 +70,7 @@ end
 
 local function request_certificate_data(crt_data_uri) 
     local response = {}
-    local httpc = http
-    if(crt_data_uri:find('https://') == 1) then 
-        httpc = https
-    end
-    local res, code, responseHeader, status = httpc.request{
+    local res, code, responseHeader, status = https.request{
         url = crt_data_uri,
         method = "GET",
         headers = { ["Content-Type"] = "application/json" },
