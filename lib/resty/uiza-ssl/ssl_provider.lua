@@ -40,7 +40,7 @@ end
 
 local function request_certificate_data(crt_data_uri, secret_name, jwt_token) 
     local response = {}
-    local rqbody= "{\"secret_name\": "..secret_name.."}"
+    local rqbody= "{\"secret_name\": \""..secret_name.."\"}"
     local res, code, responseHeader, status = https.request{
         url = crt_data_uri,
         method = "GET",
