@@ -36,16 +36,21 @@ http {
   # Initial setup tasks.
   init_by_lua_block {
     uiza_ssl = (require "resty.uiza-ssl").new()
-
-    -- Define a function to determine which SNI domains to automatically handle
-    -- and register new certificates for. Defaults to not allowing any domains,
-    -- so this must be configured.
+    -- Defaults to not allowing any domains, so this must be configured.
     uiza_ssl:set("allow_domain", function(domain)
-      return true
+        return ngx.re.match(domain, "(allow_domain)$", "ijo")
+    end)
+    -- return allow_domain when using for wildcard, type *.allow_domain 
+    uiza_ssl:set("request_domain", function(ssl, ssl_options)
+        local domain, err = ssl.server_name()
+        if (ngx.re.match(domain, "(allow_domain)$", "ijo")) then
+            domain = allow_domain
+        end
+        return domain, err
     end)
 	uiza_ssl:set("crt_uri", "<uri_of_certificate>")
 	uiza_ssl:set("crt_data_uri", "<uri_of_certificate_data>")
-    uiza_ssl:init()
+   uiza_ssl:init()
   }
 
   init_worker_by_lua_block {
