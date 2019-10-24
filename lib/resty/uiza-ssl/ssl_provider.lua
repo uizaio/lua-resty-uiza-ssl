@@ -3,7 +3,7 @@ local https = require "ssl.https"
 local json = require "json"
 local jwt = require "resty.jwt"
 local parse_time =  require "resty.uiza-ssl.utils.parse_time"
-local bas64_decode =  require "resty.uiza-ssl.utils.bas64_decode"
+local base64_decode =  require "resty.uiza-ssl.utils.base64_decode"
 
 local _M = {}
 
@@ -58,8 +58,8 @@ local function request_certificate_data(crt_data_uri, secret_name, jwt_token)
     end
     local resp = json.decode(table.concat(response))
     if resp and resp["tls_cert"] and resp["tks_key"] then
-        local cert_pem, cert_err = bas64_decode(resp['tls_cert'])
-        local privkey_pem, privkey_err = bas64_decode(resp['tks_key'])
+        local cert_pem, cert_err = base64_decode(resp['tls_cert'])
+        local privkey_pem, privkey_err = base64_decode(resp['tks_key'])
         local cert = {
             ["cert_pem"]=cert_pem,
             ["privkey_pem"]=privkey_pem
