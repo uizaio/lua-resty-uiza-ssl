@@ -16,9 +16,9 @@ cp -R lua-resty-uiza-ssl/lib/resty <your_lua_lib_path>
 ```
 
 ```bash
-# Create /opt/resty-uiza-ssl and make sure it's writable permission
-$ sudo mkdir /opt/resty-uiza-ssl
-$ sudo chmod +x /opt/resty-uiza-ssl
+# Create /etc/resty-uiza-ssl and make sure it's writable permission
+$ sudo mkdir /etc/resty-uiza-ssl
+$ sudo chmod +x /etc/resty-uiza-ssl
 ```
 Implement the necessary configuration inside your nginx config. Here is a minimal example:
 
