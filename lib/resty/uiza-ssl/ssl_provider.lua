@@ -2,8 +2,8 @@ local ltn12 = require "ltn12"
 local https = require "ssl.https"
 local json = require "json"
 local jwt = require "resty.jwt"
-local parse_time =  require "resty.uiza-ssl.utils.parse_time"
-local base64_decode =  require "resty.uiza-ssl.utils.base64_decode"
+local parse_time = require "resty.uiza-ssl.utils.parse_time"
+local base64_decode = require "resty.uiza-ssl.utils.base64_decode"
 
 local _M = {}
 
@@ -40,7 +40,7 @@ end
 
 local function request_certificate_data(crt_data_uri, secret_name, jwt_token) 
     local response = {}
-    local rqbody= "{\"secret_name\": \""..secret_name.."\"}"
+    local rqbody= '{\"secret_name\": \"'..secret_name..'\"}'
     local res, code, responseHeader, status = https.request{
         url = crt_data_uri,
         method = "GET",
@@ -78,8 +78,9 @@ function _M.issue_cert(uiza_ssl_instance, domain)
     -- Save data to storage
     local crt_data_uri = uiza_ssl_instance:get("crt_data_uri")
     assert(type(crt_data_uri) == "string", "crt_data_uri must be a string")
-    local secret_key = uiza_ssl_instance.get("secret_key")
+    local secret_key = uiza_ssl_instance:get("secret_key")
     assert(type(secret_key) == "string", "secret_key must be a string")
+
     local jwt_token = jwt:sign(secret_key, { 
         header={typ="JWT",alg="HS256"},
         payload= ''

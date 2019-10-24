@@ -25,6 +25,14 @@ function _M.new(options)
     options["renew_check_interval"] = 86400 -- 1 day
   end
 
+  if not options["crt_uri"] then 
+    print("please set crt_uri")
+  end
+
+  if not options["crt_data_uri"] then 
+    print("please set crt_uri")
+  end
+
   return setmetatable({ options = options }, { __index = _M })
 end
 

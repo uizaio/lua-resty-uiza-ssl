@@ -1,5 +1,5 @@
 local lock = require "resty.lock"
-local parse_openssl_time =  require "resty.uiza-ssl.utils.parse_openssl_time"
+local parse_openssl_time = require "resty.uiza-ssl.utils.parse_openssl_time"
 local shell_blocking = require "shell-games"
 local shuffle_table = require "resty.uiza-ssl.utils.shuffle_table"
 local ssl_provider = require "resty.uiza-ssl.ssl_provider"
