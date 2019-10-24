@@ -197,11 +197,7 @@ local function do_renew(uiza_ssl_instance)
   if not get_interval_lock("renew", uiza_ssl_instance:get("renew_check_interval")) then
     return
   end
-  local renew_lock, new_renew_lock_err = lock:new("uiza_ssl_settings", { exptime = 1800, timeout = 0 })
-  if new_renew_lock_err then
-    ngx.log(ngx.ERR, "uiza-ssl: failed to create lock: ", new_renew_lock_err)
-    return
-  end
+ 
   local _, lock_err = renew_lock:lock("renew")
   if lock_err then
     ngx.log(ngx.ERR, "uiza-ssl: failed to optain lock: ", lock_err)
