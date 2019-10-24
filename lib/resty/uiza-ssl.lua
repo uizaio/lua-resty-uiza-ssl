@@ -6,7 +6,7 @@ function _M.new(options)
   end
 
   if not options["dir"] then
-    options["dir"] = "/opt/resty-uiza-ssl"
+    options["dir"] = "/etc/resty-uiza-ssl"
   end
 
   if not options["request_domain"] then
