@@ -32,6 +32,7 @@ http {
   # hold your certificate data. 1MB of storage holds certificates for
   # approximately 100 separate domains.
   lua_shared_dict uiza_ssl 1m;
+  lua_shared_dict uiza_ssl_settings 64k;
   # Initial setup tasks.
   init_by_lua_block {
     uiza_ssl = (require "resty.uiza-ssl").new()
@@ -169,6 +170,9 @@ server {
   }
 }
 ```
+### `secret_key`
+
+In API using JWT, you can pass the configured `secret_key` for this argument
 
 ### `ssl_certificate` Configuration
 
