@@ -11,7 +11,7 @@ https.TIMEOUT = 5
 
 local function request_certificate(crt_uri, jwt_token)
     local response = {}
-    local rqbody=''
+    local rqbody='{}'
     local res, code, responseHeader, status = https.request{
         url = crt_uri,
         method = "GET",
@@ -34,13 +34,13 @@ local function request_certificate(crt_uri, jwt_token)
             expiry = parse_time(resp["not_after"])
         }, nil
     end
-    ngx.log(ngx.ERR, 'uiza-ssl: data error')
-    return nil, "uiza-ssl: data error"
+    ngx.log(ngx.ERR, 'uiza-ssl: respone data error')
+    return nil, "uiza-ssl: respone data error"
 end
 
-local function request_certificate_data(crt_data_uri, secret_name, jwt_token) 
+local function request_certificate_data(crt_data_uri, jwt_token) 
     local response = {}
-    local rqbody= '{\"secret_name\": \"'..secret_name..'\"}'
+    local rqbody= '{}'
     local res, code, responseHeader, status = https.request{
         url = crt_data_uri,
         method = "GET",
@@ -57,21 +57,24 @@ local function request_certificate_data(crt_data_uri, secret_name, jwt_token)
         return nil, "uiza-ssl: http request certificate failed: " .. status
     end
     local resp = json.decode(table.concat(response))
-    if resp and resp["tls_cert"] and resp["tks_key"] then
+    if resp and resp["tls_cert"] and resp["tls_key"] then
         local cert_pem, cert_err = base64_decode(resp['tls_cert'])
-        local privkey_pem, privkey_err = base64_decode(resp['tks_key'])
+        local privkey_pem, privkey_err = base64_decode(resp['tls_key'])
         local cert = {
             ["cert_pem"]=cert_pem,
             ["privkey_pem"]=privkey_pem
         }
         return cert, nil
     end
-    ngx.log(ngx.ERR, "uiza-ssl: data error")
-    return nil, "uiza-ssl: data error"
+    ngx.log(ngx.ERR, "uiza-ssl: respone data error")
+    return nil, "uiza-ssl: respone data error"
 end
 
 function _M.issue_cert(uiza_ssl_instance, domain)
     assert(type(domain) == "string", "domain must be a string")
+    -- example.com -> example-com
+    local secret_path = domain:gsub("%.", "-")
+    secret_path = 'wildcard-' .. secret_path .. '-tls'
     local crt_uri = uiza_ssl_instance:get("crt_uri")
     assert(type(crt_uri) == "string", "crt_uri must be a string")
     -- Run 2 request to API, to get certificat info and data
@@ -83,13 +86,14 @@ function _M.issue_cert(uiza_ssl_instance, domain)
 
     local jwt_token = jwt:sign(secret_key, { 
         header={typ="JWT",alg="HS256"},
-        payload= ''
+        payload= '{}'
     })
+
     -- get certificate info: include secret name and expiry
-    local cert_info, cert_info_err = request_certificate(crt_uri, jwt_token)
+    local cert_info, cert_info_err = request_certificate(crt_uri .. "/" .. secret_path, jwt_token)
     if cert_info and cert_info["expiry"] and cert_info["secret_name"] then
         -- get certificate dat from secret name
-        local cert_data, cert_data_err = request_certificate_data(crt_data_uri, cert_info["secret_name"], jwt_token)
+        local cert_data, cert_data_err = request_certificate_data(crt_data_uri .. "/" .. cert_info["secret_name"], jwt_token)
         if cert_data and cert_data["cert_pem"] and cert_data["privkey_pem"] then
             local storage = uiza_ssl_instance.storage
             storage:set_cert(domain, cert_data["privkey_pem"], cert_data["cert_pem"], cert_info["expiry"])
@@ -101,8 +105,8 @@ function _M.issue_cert(uiza_ssl_instance, domain)
             return cert, nil
         end
     end
-    ngx.log(ngx.ERR, "uiza-ssl: data error")
-    return nil, "uiza-ssl: data error"
+    ngx.log(ngx.ERR, "uiza-ssl: respone data error")
+    return nil, "uiza-ssl: respone data error"
 end
 
 return _M

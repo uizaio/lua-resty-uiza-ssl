@@ -48,9 +48,10 @@ http {
         end
         return domain, err
     end)
-	uiza_ssl:set("crt_uri", "<uri_of_certificate>")
-	uiza_ssl:set("crt_data_uri", "<uri_of_certificate_data>")
-   uiza_ssl:init()
+    uiza_ssl:set("crt_uri", "<uri_of_certificate>")
+    uiza_ssl:set("crt_data_uri", "<uri_of_certificate_data>")
+    uiza_ssl:set("secret_key", "<secret_key_to_access_cert_api>")
+    uiza_ssl:init()
   }
 
   init_worker_by_lua_block {
@@ -173,10 +174,11 @@ server {
 ### `secret_key`
 
 In API using JWT, you can pass the configured `secret_key` for this argument
+@See [jwt.io](https://jwt.io)
 
 ### `ssl_certificate` Configuration
 
-The `ssl_certificate` function accepts an optional table of configuration options. These options can be used to customize and control the SSL behavior on a per nginx `server` basis. Some built-in options may control the default behavior of lua-resty-auto-ssl, but any other custom data can be given as options, which will then be passed along to the [`allow_domain`](#allow_domain) and [`request_domain`](#request_domain) callback functions.
+The `ssl_certificate` function accepts an optional table of configuration options. These options can be used to customize and control the SSL behavior on a per nginx `server` basis. Some built-in options may control the default behavior of lua-resty-uiza-ssl, but any other custom data can be given as options, which will then be passed along to the [`allow_domain`](#allow_domain) and [`request_domain`](#request_domain) callback functions.
 
 Built-in configuration options:
 
