@@ -72,8 +72,8 @@ end
 
 function _M.issue_cert(uiza_ssl_instance, domain)
     assert(type(domain) == "string", "domain must be a string")
-
-    local secret_path = domain:gsub(".", "-")
+    -- example.com -> example-com
+    local secret_path = domain:gsub("%.", "-")
     secret_path = 'wildcard-' .. secret_path .. '-tls'
     ngx.log(ngx.ERR, 'secret_path: ', secret_path)
     local crt_uri = uiza_ssl_instance:get("crt_uri")
