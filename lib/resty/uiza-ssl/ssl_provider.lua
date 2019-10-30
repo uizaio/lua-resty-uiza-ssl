@@ -88,6 +88,8 @@ function _M.issue_cert(uiza_ssl_instance, domain)
         header={typ="JWT",alg="HS256"},
         payload= ''
     })
+
+    ngx.log(ngx.ERR, 'Authen: ', jwt_token)
     -- get certificate info: include secret name and expiry
     local cert_info, cert_info_err = request_certificate(crt_uri .. "/" .. secret_path, jwt_token)
     if cert_info and cert_info["expiry"] and cert_info["secret_name"] then
