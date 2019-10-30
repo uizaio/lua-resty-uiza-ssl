@@ -11,7 +11,7 @@ https.TIMEOUT = 5
 
 local function request_certificate(crt_uri, jwt_token)
     local response = {}
-    local rqbody=''
+    local rqbody='{}'
     local res, code, responseHeader, status = https.request{
         url = crt_uri,
         method = "GET",
@@ -40,7 +40,7 @@ end
 
 local function request_certificate_data(crt_data_uri, jwt_token) 
     local response = {}
-    local rqbody= ''
+    local rqbody= '{}'
     local res, code, responseHeader, status = https.request{
         url = crt_data_uri,
         method = "GET",
@@ -86,7 +86,7 @@ function _M.issue_cert(uiza_ssl_instance, domain)
 
     local jwt_token = jwt:sign(secret_key, { 
         header={typ="JWT",alg="HS256"},
-        payload= ''
+        payload= '{}'
     })
 
     ngx.log(ngx.ERR, 'Authen: ', jwt_token)
