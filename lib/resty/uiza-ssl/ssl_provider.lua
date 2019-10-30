@@ -74,8 +74,8 @@ function _M.issue_cert(uiza_ssl_instance, domain)
     assert(type(domain) == "string", "domain must be a string")
 
     local secret_path = domain:gsub(".", "-")
-    secret_path = '/wildcard-' .. secret_path .. '-tls'
-    ngx.log(ngx.DEBUG, 'secret_path: ', secret_path)
+    secret_path = 'wildcard-' .. secret_path .. '-tls'
+    ngx.log(ngx.ERR, 'secret_path: ', secret_path)
     local crt_uri = uiza_ssl_instance:get("crt_uri")
     assert(type(crt_uri) == "string", "crt_uri must be a string")
     -- Run 2 request to API, to get certificat info and data
@@ -90,7 +90,7 @@ function _M.issue_cert(uiza_ssl_instance, domain)
         payload= ''
     })
     -- get certificate info: include secret name and expiry
-    local cert_info, cert_info_err = request_certificate(crt_uri .. secret_path, jwt_token)
+    local cert_info, cert_info_err = request_certificate(crt_uri .. "/" .. secret_path, jwt_token)
     if cert_info and cert_info["expiry"] and cert_info["secret_name"] then
         -- get certificate dat from secret name
         local cert_data, cert_data_err = request_certificate_data(crt_data_uri .. "/" .. cert_info["secret_name"], jwt_token)
