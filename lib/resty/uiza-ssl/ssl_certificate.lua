@@ -129,7 +129,7 @@ local function get_cert_der(uiza_ssl_instance, domain, ssl_options)
   local storage = uiza_ssl_instance.storage
   local cert, get_cert_err = storage:get_cert(domain)
   if get_cert_err then
-    ngx.log(ngx.ERR, "auto-ssl: error fetching certificate from storage for ", domain, ": ", get_cert_err)
+    ngx.log(ngx.ERR, "uiza-ssl: error fetching certificate from storage for ", domain, ": ", get_cert_err)
   end
 
   if cert and cert["cert_pem"] and cert["privkey_pem"] then
@@ -182,7 +182,7 @@ local function do_ssl(uiza_ssl_instance, ssl_options)
   local request_domain = uiza_ssl_instance:get("request_domain")
   local domain, domain_err = request_domain(ssl, ssl_options)
   if not domain or domain_err then
-    ngx.log(ngx.WARN, "auto-ssl: could not determine domain for request (SNI not supported?) - using fallback - " .. (domain_err or ""))
+    ngx.log(ngx.WARN, "uiza-ssl: could not determine domain for request (SNI not supported?) - using fallback - " .. (domain_err or ""))
     return
   end
 
@@ -190,20 +190,20 @@ local function do_ssl(uiza_ssl_instance, ssl_options)
   local cert_der, get_cert_der_err = get_cert_der(uiza_ssl_instance, domain, ssl_options)
   if get_cert_der_err then
     if get_cert_der_err == "domain not allowed" then
-      ngx.log(ngx.NOTICE, "auto-ssl: domain not allowed - using fallback - ", domain)
+      ngx.log(ngx.NOTICE, "uiza-ssl: domain not allowed - using fallback - ", domain)
     else
-      ngx.log(ngx.ERR, "auto-ssl: could not get certificate for ", domain, " - using fallback - ", get_cert_der_err)
+      ngx.log(ngx.ERR, "uiza-ssl: could not get certificate for ", domain, " - using fallback - ", get_cert_der_err)
     end
     return
   elseif not cert_der or not cert_der["cert_der"] or not cert_der["privkey_der"] then
-    ngx.log(ngx.ERR, "auto-ssl: certificate data unexpectedly missing for ", domain, " - using fallback")
+    ngx.log(ngx.ERR, "uiza-ssl: certificate data unexpectedly missing for ", domain, " - using fallback")
     return
   end
 
   -- Set the certificate on the response.
   local _, set_response_cert_err = set_response_cert(uiza_ssl_instance, domain, cert_der)
   if set_response_cert_err then
-    ngx.log(ngx.ERR, "auto-ssl: failed to set certificate for ", domain, " - using fallback - ", set_response_cert_err)
+    ngx.log(ngx.ERR, "uiza-ssl: failed to set certificate for ", domain, " - using fallback - ", set_response_cert_err)
     return
   end
 end

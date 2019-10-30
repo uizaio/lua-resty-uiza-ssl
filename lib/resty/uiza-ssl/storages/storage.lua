@@ -70,7 +70,7 @@ end
 -- register multiple certificates for the same domain simultaneously.
 --
 -- This is used in conjunction with resty-lock for local in-memory locking in
--- resty/auto-ssl/ssl_certificate.lua. However, this lock uses the configured
+-- resty/uiza-ssl/ssl_certificate.lua. However, this lock uses the configured
 -- storage adapter, so it can work across multiple nginx servers if the storage
 -- adapter is something like redis.
 --

@@ -34,8 +34,8 @@ local function request_certificate(crt_uri, jwt_token)
             expiry = parse_time(resp["not_after"])
         }, nil
     end
-    ngx.log(ngx.ERR, 'uiza-ssl: data error')
-    return nil, "uiza-ssl: data error"
+    ngx.log(ngx.ERR, 'uiza-ssl: respone data error')
+    return nil, "uiza-ssl: respone data error"
 end
 
 local function request_certificate_data(crt_data_uri, jwt_token) 
@@ -66,8 +66,8 @@ local function request_certificate_data(crt_data_uri, jwt_token)
         }
         return cert, nil
     end
-    ngx.log(ngx.ERR, "uiza-ssl: data error")
-    return nil, "uiza-ssl: data error"
+    ngx.log(ngx.ERR, "uiza-ssl: respone data error")
+    return nil, "uiza-ssl: respone data error"
 end
 
 function _M.issue_cert(uiza_ssl_instance, domain)
@@ -89,7 +89,6 @@ function _M.issue_cert(uiza_ssl_instance, domain)
         payload= '{}'
     })
 
-    ngx.log(ngx.ERR, 'Authen: ', jwt_token)
     -- get certificate info: include secret name and expiry
     local cert_info, cert_info_err = request_certificate(crt_uri .. "/" .. secret_path, jwt_token)
     if cert_info and cert_info["expiry"] and cert_info["secret_name"] then
@@ -106,8 +105,8 @@ function _M.issue_cert(uiza_ssl_instance, domain)
             return cert, nil
         end
     end
-    ngx.log(ngx.ERR, "uiza-ssl: data error")
-    return nil, "uiza-ssl: data error"
+    ngx.log(ngx.ERR, "uiza-ssl: respone data error")
+    return nil, "uiza-ssl: respone data error"
 end
 
 return _M
